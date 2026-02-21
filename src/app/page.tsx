@@ -1,101 +1,245 @@
-import Image from "next/image";
+import { Projects } from "@/components/Projects";
+import { ContactForm } from "@/components/ContactForm";
+import { ViewCounter } from "@/components/ViewCounter";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="min-h-screen" style={{ background: '#1c1c1a' }}>
+      {/* Hero Section */}
+      <section className="min-h-screen flex flex-col items-center justify-center px-6 text-center relative">
+        <p className="text-neutral-500 text-base mb-4 tracking-widest uppercase font-light">
+          Hello, I&apos;m
+        </p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+        <h1 className="text-5xl sm:text-7xl font-light text-neutral-200 mb-4 tracking-tight">
+          Pradham{" "}
+          <span style={{ color: '#a3a380' }}>
+            Mummaleti
+          </span>
+        </h1>
+
+        <h2 className="text-xl sm:text-2xl text-neutral-400 mb-8 font-light">
+          Associate Data Scientist
+        </h2>
+
+        <p className="text-neutral-500 max-w-lg text-base mb-12 leading-relaxed font-light">
+          I turn data into insights and ideas into reality.
+          Passionate about machine learning, NLP, and building things that matter.
+        </p>
+
+        <div className="flex gap-4 flex-col sm:flex-row">
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#projects"
+            className="px-8 py-3 text-neutral-200 font-normal rounded-none border transition-all hover:bg-neutral-200 hover:text-neutral-900"
+            style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            View My Work
           </a>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#contact"
+            className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal rounded-none hover:border-neutral-500 hover:text-neutral-300 transition-colors"
           >
-            Read our docs
+            Get In Touch
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+        {/* View Counter */}
+        <div className="absolute bottom-20">
+          <ViewCounter page="home" />
+        </div>
+
+        <div className="absolute bottom-10 animate-bounce">
+          <svg
+            className="w-5 h-5 text-neutral-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="py-24 px-6" style={{ backgroundColor: '#1f1f1c' }}>
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-light text-neutral-200 text-center mb-2 tracking-tight">
+            Research & Projects
+          </h2>
+          <p className="text-neutral-500 text-center mb-16 max-w-xl mx-auto font-light">
+            Deep learning architectures, NLP research, and scalable ML systems
+          </p>
+
+          <Projects />
+        </div>
+      </section>
+
+      {/* Publications Section */}
+      <section className="py-24 px-6" style={{ backgroundColor: '#1c1c1a' }}>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-light text-neutral-200 text-center mb-16 tracking-tight">
+            Publications
+          </h2>
+
+          <div className="space-y-6">
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>
+                ACL 2025
+              </span>
+              <h3 className="text-lg font-normal text-neutral-200 mb-2">
+                That Ain&apos;t Right: Assessing LLM Performance on QA in African American and West African English Dialects
+              </h3>
+              <p className="text-neutral-500 text-sm font-light">
+                W. Coggins, J. McKenzie, S. Youm, <span style={{ color: '#a3a380' }}>P. Mummaleti</span>, J. Gilbert, E. Ragan, and B. J. Dorr
+              </p>
+              <p className="text-neutral-600 text-sm mt-2 font-light">
+                9th Widening NLP Workshop, Suzhou, China
+              </p>
+            </div>
+
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>
+                COMSYS 2024
+              </span>
+              <h3 className="text-lg font-normal text-neutral-200 mb-2">
+                Automation of Human Body Measurements from 2D Images
+              </h3>
+              <p className="text-neutral-500 text-sm font-light">
+                C. Srikanth, S. R. Yerabelly, <span style={{ color: '#a3a380' }}>P. Mummaleti</span>, and A. Jain
+              </p>
+              <p className="text-neutral-600 text-sm mt-2 font-light">
+                5th International Conference on Frontiers in Computing and Systems
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section id="skills" className="py-24 px-6" style={{ backgroundColor: '#1f1f1c' }}>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-light text-neutral-200 text-center mb-16 tracking-tight">
+            Technical Skills
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <h3 className="text-base font-normal text-neutral-300 mb-4 tracking-wide uppercase">
+                Languages
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {["Python", "C/C++", "Julia", "Pony", "R", "SQL"].map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <h3 className="text-base font-normal text-neutral-300 mb-4 tracking-wide uppercase">
+                ML & AI
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {["PyTorch", "TensorFlow", "Scikit-learn", "Hugging Face", "FAISS"].map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <h3 className="text-base font-normal text-neutral-300 mb-4 tracking-wide uppercase">
+                Tools & Data
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {["NumPy", "Pandas", "Jupyter", "AWS", "Git"].map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+              <h3 className="text-base font-normal text-neutral-300 mb-4 tracking-wide uppercase">
+                Focus Areas
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {["NLP", "LLMs", "Distributed Training", "Transformers"].map((skill) => (
+                  <span
+                    key={skill}
+                    className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 px-6" style={{ backgroundColor: '#1c1c1a' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">
+            Let&apos;s Connect
+          </h2>
+          <p className="text-neutral-500 mb-12 font-light">
+            Open to research collaborations, ML engineering roles, and interesting projects.
+          </p>
+
+          <ContactForm />
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+            <a
+              href="mailto:pradhammummaleti@ufl.edu"
+              className="px-6 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              pradhammummaleti@ufl.edu
+            </a>
+            <a
+              href="https://linkedin.com/in/pradhammummaleti"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/cxrlton"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-neutral-800">
+        <p className="text-center text-neutral-600 text-sm font-light">
+          © 2025 Pradham Mummaleti
+        </p>
       </footer>
-    </div>
+    </main>
   );
 }
