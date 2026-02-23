@@ -23,8 +23,7 @@ export default function Home() {
         </h2>
 
         <p className="text-neutral-500 max-w-lg text-base mb-12 leading-relaxed font-light">
-          I turn data into insights and ideas into reality.
-          Passionate about machine learning, NLP, and building things that matter.
+          Teaching machines to understand the world — without imposing one.
         </p>
 
         <div className="flex gap-4 flex-col sm:flex-row">
