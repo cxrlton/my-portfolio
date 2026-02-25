@@ -40,6 +40,13 @@ export default function Home() {
           >
             Get In Touch
           </a>
+          <a
+            href="/cv.pdf"
+            download
+            className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal rounded-none hover:border-neutral-500 hover:text-neutral-300 transition-colors"
+          >
+            Download CV
+          </a>
         </div>
 
         {/* View Counter */}
