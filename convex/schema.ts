@@ -29,4 +29,9 @@ export default defineSchema({
     page: v.string(),
     count: v.number(),
   }),
+
+  // "What I'm working on" widget
+  currentFocus: defineTable({
+    text: v.string(),
+  }),
 });

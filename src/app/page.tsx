@@ -1,4 +1,5 @@
 import { ViewCounter } from "@/components/ViewCounter";
+import { CurrentFocus } from "@/components/CurrentFocus";
 
 export default function Home() {
   return (
@@ -19,11 +20,13 @@ export default function Home() {
           Associate Data Scientist
         </h2>
 
-        <p className="text-neutral-500 max-w-lg text-base mb-12 leading-relaxed font-light">
+        <p className="text-neutral-500 max-w-lg text-base leading-relaxed font-light">
           Teaching machines to understand the world — without imposing one.
         </p>
 
-        <div className="flex gap-4 flex-col sm:flex-row">
+        <CurrentFocus />
+
+        <div className="flex gap-4 flex-col sm:flex-row mt-12">
           <a
             href="/projects"
             className="px-8 py-3 text-neutral-200 font-normal rounded-none border transition-all hover:bg-neutral-200 hover:text-neutral-900"
