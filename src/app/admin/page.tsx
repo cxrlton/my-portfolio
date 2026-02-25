@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState, useEffect } from "react";
 
-const PASSWORD = "R3l4AmIc5ix5w3QrGhh5";
+const PASSWORD = "Kyledarnell9";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
