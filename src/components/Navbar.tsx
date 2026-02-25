@@ -30,7 +30,7 @@ export function Navbar() {
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.metaKey && e.shiftKey && e.key === 'A') {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
         router.push('/admin');
       }
     }
