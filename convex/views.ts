@@ -1,32 +1,33 @@
 import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
 
-// Get view count for a page
+const SITE_KEY = "site";
+
+// Get total site view count
 export const get = query({
-  args: { page: v.string() },
-  handler: async (ctx, args) => {
+  args: {},
+  handler: async (ctx) => {
     const view = await ctx.db
       .query("views")
-      .filter((q) => q.eq(q.field("page"), args.page))
+      .filter((q) => q.eq(q.field("page"), SITE_KEY))
       .first();
     return view?.count ?? 0;
   },
 });
 
-// Increment view count
+// Increment total site view count
 export const increment = mutation({
-  args: { page: v.string() },
-  handler: async (ctx, args) => {
+  args: {},
+  handler: async (ctx) => {
     const existing = await ctx.db
       .query("views")
-      .filter((q) => q.eq(q.field("page"), args.page))
+      .filter((q) => q.eq(q.field("page"), SITE_KEY))
       .first();
 
     if (existing) {
       await ctx.db.patch(existing._id, { count: existing.count + 1 });
       return existing.count + 1;
     } else {
-      await ctx.db.insert("views", { page: args.page, count: 1 });
+      await ctx.db.insert("views", { page: SITE_KEY, count: 1 });
       return 1;
     }
   },

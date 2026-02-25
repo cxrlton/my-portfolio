@@ -48,7 +48,7 @@ export default function Home() {
 
         {/* View Counter */}
         <div className="absolute bottom-20">
-          <ViewCounter page="home" />
+          <ViewCounter />
         </div>
 
         <div className="absolute bottom-10 animate-bounce">
