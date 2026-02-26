@@ -52,28 +52,32 @@ export function Navbar() {
 
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex flex-col gap-1.5 p-1 group"
+          className="flex flex-col justify-center gap-[5px] w-8 h-8 focus:outline-none"
           aria-label="Toggle menu"
         >
           <span
-            className="block w-5 h-px transition-all duration-200"
+            className="block h-px transition-all duration-300 origin-center"
             style={{
               background: '#a3a380',
-              transform: open ? 'translateY(5px) rotate(45deg)' : 'none',
+              width: open ? '20px' : '20px',
+              transform: open ? 'translateY(6px) rotate(45deg)' : 'none',
             }}
           />
           <span
-            className="block w-5 h-px transition-all duration-200"
+            className="block h-px transition-all duration-300"
             style={{
               background: '#a3a380',
+              width: '14px',
               opacity: open ? 0 : 1,
+              transform: open ? 'scaleX(0)' : 'scaleX(1)',
             }}
           />
           <span
-            className="block w-5 h-px transition-all duration-200"
+            className="block h-px transition-all duration-300 origin-center"
             style={{
               background: '#a3a380',
-              transform: open ? 'translateY(-5px) rotate(-45deg)' : 'none',
+              width: open ? '20px' : '20px',
+              transform: open ? 'translateY(-6px) rotate(-45deg)' : 'none',
             }}
           />
         </button>
