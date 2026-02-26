@@ -14,6 +14,20 @@ export const get = query({
   },
 });
 
+// Reset view count to 0
+export const reset = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const existing = await ctx.db
+      .query("views")
+      .filter((q) => q.eq(q.field("page"), SITE_KEY))
+      .first();
+    if (existing) {
+      await ctx.db.patch(existing._id, { count: 0 });
+    }
+  },
+});
+
 // Increment total site view count
 export const increment = mutation({
   args: {},
