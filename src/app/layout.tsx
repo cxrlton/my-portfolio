@@ -19,6 +19,11 @@ const robotoMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: "Pradham Mummaleti",
   description: "Associate Data Scientist | ML & NLP Researcher",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "PM",
+  },
 };
 
 export default function RootLayout({
