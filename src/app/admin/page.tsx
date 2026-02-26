@@ -3,11 +3,19 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const PASSWORD = "Kyledarnell9";
 
 export default function AdminPage() {
+  const router = useRouter();
   const [authed, setAuthed] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') router.push('/'); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [router]);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
