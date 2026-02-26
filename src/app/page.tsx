@@ -1,56 +1,92 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { ViewCounter } from "@/components/ViewCounter";
 import { CurrentFocus } from "@/components/CurrentFocus";
 import { ContactForm } from "@/components/ContactForm";
 
-const SECTIONS = ['Home', 'Projects', 'Publications', 'Skills', 'Contact'];
+const SECTIONS = ['Home', 'Projects', 'Publications', 'Skills', 'Certifications', 'Contact'];
+const THRESHOLD = 80;
+const DURATION = 700;
 
 export default function Home() {
   const [active, setActive] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const [fading, setFading] = useState(false);
+  const transitioning = useRef(false);
+  const accumulated = useRef(0);
+
+  const goTo = useCallback((next: number) => {
+    const clamped = Math.max(0, Math.min(SECTIONS.length - 1, next));
+    if (clamped === active || transitioning.current) return;
+
+    transitioning.current = true;
+    accumulated.current = 0;
+    setFading(true);
+
+    setTimeout(() => {
+      setActive(clamped);
+      setFading(false);
+    }, 180);
+
+    setTimeout(() => {
+      transitioning.current = false;
+    }, DURATION);
+  }, [active]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      if (transitioning.current) return;
+      accumulated.current += e.deltaY;
+      if (accumulated.current > THRESHOLD) goTo(active + 1);
+      else if (accumulated.current < -THRESHOLD) goTo(active - 1);
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = sectionRefs.current.findIndex((s) => s === entry.target);
-            if (idx !== -1) setActive(idx);
-          }
-        });
-      },
-      { root: container, threshold: 0.5 }
-    );
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') goTo(active + 1);
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') goTo(active - 1);
+    }
 
-    sectionRefs.current.forEach((s) => { if (s) observer.observe(s); });
-    return () => observer.disconnect();
-  }, []);
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [active, goTo]);
 
-  function scrollTo(i: number) {
-    sectionRefs.current[i]?.scrollIntoView({ behavior: 'smooth' });
-  }
+  const section = (i: number) => ({
+    position: 'fixed' as const,
+    inset: 0,
+    top: '57px',
+    transform: `translateY(${(i - active) * 100}%)`,
+    transition: `transform ${DURATION}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+    overflow: 'hidden',
+  });
 
   return (
     <>
-      <style>{`#snap-container::-webkit-scrollbar { display: none; }`}</style>
+      {/* Fade overlay */}
+      <div
+        className="fixed inset-0 z-30 pointer-events-none"
+        style={{
+          background: '#f0efe8',
+          opacity: fading ? 0.14 : 0,
+          transition: 'opacity 180ms ease',
+        }}
+      />
 
       {/* Dot navigation */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3">
         {SECTIONS.map((label, i) => (
           <button
             key={i}
-            onClick={() => scrollTo(i)}
+            onClick={() => goTo(i)}
             title={label}
             className="rounded-full transition-all duration-300"
             style={{
-              width: active === i ? '6px' : '5px',
-              height: active === i ? '6px' : '5px',
+              width: '6px',
+              height: '6px',
               backgroundColor: active === i ? '#a3a380' : '#3a3a38',
               transform: active === i ? 'scale(1.6)' : 'scale(1)',
             }}
@@ -58,17 +94,10 @@ export default function Home() {
         ))}
       </div>
 
-      <div
-        id="snap-container"
-        ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory"
-        style={{ scrollbarWidth: 'none' }}
-      >
-
-        {/* ── Hero ── */}
-        <section
-          ref={(el) => { sectionRefs.current[0] = el; }}
-          className="h-screen snap-start flex flex-col items-center justify-center px-6 text-center relative"
+      {/* ── Hero ── */}
+      <div style={section(0)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6 text-center relative"
           style={{ background: '#1c1c1a' }}
         >
           <p className="text-neutral-500 text-base mb-4 tracking-widest uppercase font-light">
@@ -89,14 +118,14 @@ export default function Home() {
 
           <div className="flex gap-4 flex-col sm:flex-row mt-12">
             <button
-              onClick={() => scrollTo(1)}
+              onClick={() => goTo(1)}
               className="px-8 py-3 text-neutral-200 font-normal border transition-all hover:bg-neutral-200 hover:text-neutral-900"
               style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}
             >
               View My Work
             </button>
             <button
-              onClick={() => scrollTo(4)}
+              onClick={() => goTo(5)}
               className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors"
             >
               Get In Touch
@@ -115,20 +144,21 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => scrollTo(1)}
+            onClick={() => goTo(1)}
             className="absolute bottom-10 animate-bounce"
-            aria-label="Scroll to next section"
+            aria-label="Next section"
           >
             <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </button>
-        </section>
+        </div>
+      </div>
 
-        {/* ── Projects ── */}
-        <section
-          ref={(el) => { sectionRefs.current[1] = el; }}
-          className="h-screen snap-start flex flex-col items-center justify-center px-6"
+      {/* ── Projects ── */}
+      <div style={section(1)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6"
           style={{ background: '#1f1f1c' }}
         >
           <div className="w-full max-w-4xl">
@@ -141,27 +171,11 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-4">
               {[
-                {
-                  label: 'NLP',
-                  title: 'Dialect-Robust QA',
-                  desc: 'LLM evaluation across African American and West African English dialects.',
-                },
-                {
-                  label: 'Computer Vision',
-                  title: 'Body Measurement Automation',
-                  desc: 'Extracting human body measurements from 2D images using deep learning.',
-                },
-                {
-                  label: 'ML Systems',
-                  title: 'Distributed Training',
-                  desc: 'Scalable training pipelines for large language models across GPU clusters.',
-                },
+                { label: 'NLP', title: 'Dialect-Robust QA', desc: 'LLM evaluation across African American and West African English dialects.' },
+                { label: 'Computer Vision', title: 'Body Measurement Automation', desc: 'Extracting human body measurements from 2D images using deep learning.' },
+                { label: 'ML Systems', title: 'Distributed Training', desc: 'Scalable training pipelines for large language models across GPU clusters.' },
               ].map((p) => (
-                <div
-                  key={p.title}
-                  className="p-5 border border-neutral-800"
-                  style={{ backgroundColor: '#222220' }}
-                >
+                <div key={p.title} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
                   <span className="text-xs tracking-widest uppercase mb-3 inline-block font-light" style={{ color: '#a3a380' }}>
                     {p.label}
                   </span>
@@ -177,12 +191,13 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ── Publications ── */}
-        <section
-          ref={(el) => { sectionRefs.current[2] = el; }}
-          className="h-screen snap-start flex flex-col items-center justify-center px-6"
+      {/* ── Publications ── */}
+      <div style={section(2)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6"
           style={{ background: '#1c1c1a' }}
         >
           <div className="w-full max-w-3xl">
@@ -218,12 +233,13 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ── Skills ── */}
-        <section
-          ref={(el) => { sectionRefs.current[3] = el; }}
-          className="h-screen snap-start flex flex-col items-center justify-center px-6"
+      {/* ── Skills ── */}
+      <div style={section(3)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6"
           style={{ background: '#1f1f1c' }}
         >
           <div className="w-full max-w-3xl">
@@ -251,13 +267,73 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ── Contact ── */}
-        <section
-          ref={(el) => { sectionRefs.current[4] = el; }}
-          className="h-screen snap-start flex flex-col items-center justify-center px-6"
+      {/* ── Certifications ── */}
+      <div style={section(4)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6"
           style={{ background: '#1c1c1a' }}
+        >
+          <div className="w-full max-w-3xl">
+            <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">
+              Certifications
+            </h2>
+
+            <div className="space-y-5">
+              <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                  <div>
+                    <h3 className="text-base font-normal text-neutral-200">
+                      Senior Certificate in Computer Science & Engineering
+                    </h3>
+                    <p className="text-sm font-light mt-1" style={{ color: '#a3a380' }}>University of Florida</p>
+                  </div>
+                  <span className="text-xs tracking-widest uppercase text-neutral-500 font-light whitespace-nowrap">Jan – May 2024</span>
+                </div>
+                <p className="text-neutral-500 text-sm font-light leading-relaxed">
+                  Completed the final undergraduate semester through an exchange program at the University of Florida, earning 9 graduate-level credits.
+                </p>
+              </div>
+
+              <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                  <div>
+                    <h3 className="text-base font-normal text-neutral-200">
+                      Generative AI with Large Language Models
+                    </h3>
+                    <p className="text-sm font-light mt-1" style={{ color: '#a3a380' }}>
+                      Coursera · Amazon Web Services · DeepLearning.AI
+                    </p>
+                  </div>
+                  <span className="text-xs tracking-widest uppercase text-neutral-500 font-light whitespace-nowrap">Oct 2023</span>
+                </div>
+              </div>
+
+              <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                  <div>
+                    <h3 className="text-base font-normal text-neutral-200">
+                      Natural Language Processing with Classification and Vector Spaces
+                    </h3>
+                    <p className="text-sm font-light mt-1" style={{ color: '#a3a380' }}>
+                      Coursera · DeepLearning.AI
+                    </p>
+                  </div>
+                  <span className="text-xs tracking-widest uppercase text-neutral-500 font-light whitespace-nowrap">June 2024</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Contact ── */}
+      <div style={section(5)}>
+        <div
+          className="h-full flex flex-col items-center justify-center px-6"
+          style={{ background: '#1f1f1c' }}
         >
           <div className="w-full max-w-xl text-center">
             <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">
@@ -283,8 +359,7 @@ export default function Home() {
 
             <p className="text-neutral-700 text-xs font-light mt-16">© 2025 Pradham Mummaleti</p>
           </div>
-        </section>
-
+        </div>
       </div>
     </>
   );
