@@ -46,13 +46,13 @@ export async function GET() {
     });
 
     if (res.status === 204 || res.status >= 400) {
-      return NextResponse.json({ isPlaying: false });
+      return NextResponse.json({ isPlaying: false, debug: `status_${res.status}` });
     }
 
     const song = await res.json();
 
     if (!song?.item) {
-      return NextResponse.json({ isPlaying: false });
+      return NextResponse.json({ isPlaying: false, debug: 'no_item', raw: song });
     }
 
     return NextResponse.json({
@@ -62,7 +62,7 @@ export async function GET() {
       albumArt:  song.item.album.images[2]?.url ?? song.item.album.images[0]?.url,
       songUrl:   song.item.external_urls.spotify,
     });
-  } catch {
-    return NextResponse.json({ isPlaying: false });
+  } catch (e) {
+    return NextResponse.json({ isPlaying: false, debug: String(e) });
   }
 }
