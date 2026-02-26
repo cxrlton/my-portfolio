@@ -10,8 +10,15 @@ export function ViewCounter() {
   const hasIncremented = useRef(false);
 
   useEffect(() => {
-    if (!hasIncremented.current) {
-      hasIncremented.current = true;
+    if (hasIncremented.current) return;
+    hasIncremented.current = true;
+
+    const key = 'pv_counted';
+    const last = localStorage.getItem(key);
+    const today = new Date().toDateString();
+
+    if (last !== today) {
+      localStorage.setItem(key, today);
       increment({});
     }
   }, [increment]);
