@@ -100,11 +100,11 @@ export default function Home() {
 
         {/* ── Projects ── */}
         <div ref={sec(1)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-8" style={{ background: '#1f1f1c' }}>
             <div className="w-full max-w-4xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-2 tracking-tight">Research & Projects</h2>
-              <p className="text-neutral-500 text-center mb-10 font-light text-sm">Deep learning architectures, NLP research, and scalable ML systems</p>
-              <div className="grid md:grid-cols-3 gap-4">
+              <p className="text-neutral-500 text-center mb-5 sm:mb-10 font-light text-sm">Deep learning architectures, NLP research, and scalable ML systems</p>
+              <div className="grid md:grid-cols-3 gap-3 sm:gap-4">
                 {[
                   { label: 'PyTorch · Dec 2024', title: 'GPT-2 Reimplementation',    desc: 'Reimplemented GPT-2 (~124M params) in PyTorch, trained on FineWeb-Edu (10B tokens) using DDP across 4x NVIDIA L40S GPUs with Flash Attention and mixed precision.' },
                   { label: 'Research · Jan 2024', title: 'Memorizing Transformers',   desc: 'Implemented kNN-based memory retrieval and external memory management, handling sequences up to 5120 tokens using PyTorch and FAISS.' },
@@ -126,12 +126,12 @@ export default function Home() {
 
         {/* ── Publications ── */}
         <div ref={sec(2)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1c1c1a' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-8" style={{ background: '#1c1c1a' }}>
             <div className="w-full max-w-3xl">
-              <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Publications</h2>
+              <h2 className="text-3xl font-light text-neutral-200 text-center mb-5 sm:mb-10 tracking-tight">Publications</h2>
               <div className="space-y-5">
                 <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
-                  <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>ACL 2025</span>
+                  <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>EMNLP 2025</span>
                   <h3 className="text-base font-normal text-neutral-200 mb-2">That Ain&apos;t Right: Assessing LLM Performance on QA in African American and West African English Dialects</h3>
                   <p className="text-neutral-500 text-sm font-light">W. Coggins, J. McKenzie, S. Youm, <span style={{ color: '#a3a380' }}>P. Mummaleti</span>, J. Gilbert, E. Ragan, and B. J. Dorr</p>
                   <p className="text-neutral-600 text-xs mt-2 font-light">9th Widening NLP Workshop, Suzhou, China</p>
@@ -170,10 +170,10 @@ export default function Home() {
 
         {/* ── Skills ── */}
         <div ref={sec(4)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-8" style={{ background: '#1f1f1c' }}>
             <div className="w-full max-w-3xl">
-              <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Technical Skills</h2>
-              <div className="grid md:grid-cols-2 gap-5">
+              <h2 className="text-3xl font-light text-neutral-200 text-center mb-5 sm:mb-10 tracking-tight">Technical Skills</h2>
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-5">
                 {[
                   { label: 'Languages',    skills: ['Python', 'C/C++', 'Julia', 'Pony', 'R', 'SQL'] },
                   { label: 'ML & AI',      skills: ['PyTorch', 'TensorFlow', 'Scikit-learn', 'Hugging Face', 'FAISS'] },
@@ -194,10 +194,10 @@ export default function Home() {
 
         {/* ── Certifications ── */}
         <div ref={sec(5)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1c1c1a' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-8" style={{ background: '#1c1c1a' }}>
             <div className="w-full max-w-3xl">
-              <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Certifications</h2>
-              <div className="space-y-5">
+              <h2 className="text-3xl font-light text-neutral-200 text-center mb-5 sm:mb-10 tracking-tight">Certifications</h2>
+              <div className="space-y-3 sm:space-y-5">
                 <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                     <div>
@@ -233,17 +233,17 @@ export default function Home() {
 
         {/* ── Contact ── */}
         <div ref={sec(6)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6 overflow-y-auto py-8" style={{ background: '#1f1f1c' }}>
             <div className="w-full max-w-xl text-center">
               <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">Let&apos;s Connect</h2>
-              <p className="text-neutral-500 mb-10 font-light text-sm">Open to research collaborations, ML engineering roles, and interesting projects.</p>
+              <p className="text-neutral-500 mb-5 sm:mb-10 font-light text-sm">Open to research collaborations, ML engineering roles, and interesting projects.</p>
               <ContactForm />
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <a href="mailto:pradhammummaleti@ufl.edu" className="px-5 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors text-sm">pradhammummaleti@ufl.edu</a>
                 <a href="https://linkedin.com/in/pradhammummaleti" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors text-sm">LinkedIn</a>
                 <a href="https://github.com/cxrlton" target="_blank" rel="noopener noreferrer" className="px-5 py-2 border border-neutral-700 text-neutral-400 font-light hover:border-neutral-500 hover:text-neutral-300 transition-colors text-sm">GitHub</a>
               </div>
-              <p className="text-neutral-700 text-xs font-light mt-16">© 2025 Pradham Mummaleti</p>
+              <p className="text-neutral-700 text-xs font-light mt-6 sm:mt-16">© 2025 Pradham Mummaleti</p>
             </div>
           </div>
         </div>
