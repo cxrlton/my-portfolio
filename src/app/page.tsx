@@ -132,9 +132,6 @@ export default function Home() {
           style={{ background: '#1f1f1c' }}
         >
           <div className="w-full max-w-4xl">
-            <p className="text-xs tracking-widest uppercase mb-2 text-center font-light" style={{ color: '#a3a380' }}>
-              02
-            </p>
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-2 tracking-tight">
               Research & Projects
             </h2>
@@ -189,9 +186,6 @@ export default function Home() {
           style={{ background: '#1c1c1a' }}
         >
           <div className="w-full max-w-3xl">
-            <p className="text-xs tracking-widest uppercase mb-2 text-center font-light" style={{ color: '#a3a380' }}>
-              03
-            </p>
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">
               Publications
             </h2>
@@ -233,9 +227,6 @@ export default function Home() {
           style={{ background: '#1f1f1c' }}
         >
           <div className="w-full max-w-3xl">
-            <p className="text-xs tracking-widest uppercase mb-2 text-center font-light" style={{ color: '#a3a380' }}>
-              04
-            </p>
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">
               Technical Skills
             </h2>
@@ -269,9 +260,6 @@ export default function Home() {
           style={{ background: '#1c1c1a' }}
         >
           <div className="w-full max-w-xl text-center">
-            <p className="text-xs tracking-widest uppercase mb-2 text-center font-light" style={{ color: '#a3a380' }}>
-              05
-            </p>
             <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">
               Let&apos;s Connect
             </h2>
