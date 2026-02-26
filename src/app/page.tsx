@@ -3,7 +3,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { ViewCounter } from "@/components/ViewCounter";
 import { CurrentFocus } from "@/components/CurrentFocus";
-import { NowPlaying } from "@/components/NowPlaying";
 import { ContactForm } from "@/components/ContactForm";
 
 const SECTIONS = ['Home', 'Projects', 'Publications', 'Skills', 'Certifications', 'Contact'];
@@ -79,7 +78,6 @@ export default function Home() {
               Teaching machines to understand the world — without imposing one.
             </p>
             <CurrentFocus />
-            <NowPlaying />
             <div className="flex gap-4 flex-col sm:flex-row mt-12">
               <button onClick={() => goTo(1)} className="px-8 py-3 text-neutral-200 font-normal border transition-all hover:bg-neutral-200 hover:text-neutral-900" style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}>
                 View My Work

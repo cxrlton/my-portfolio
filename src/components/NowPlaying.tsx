@@ -36,17 +36,17 @@ export function NowPlaying() {
       href={track.songUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-2 mt-4 group"
+      className="fixed bottom-6 left-6 z-50 flex items-center gap-2 group"
     >
       {track.albumArt && (
-        <img src={track.albumArt} alt={track.title} className="w-4 h-4 rounded-sm opacity-80" />
+        <img src={track.albumArt} alt={track.title} className="w-8 h-8 rounded-sm opacity-90" />
       )}
-      <p className="text-neutral-500 text-sm font-light">
-        <span style={{ color: '#a3a380' }}>♫</span>{' '}
-        <span className="group-hover:text-neutral-400 transition-colors">
+      <div>
+        <p className="text-xs font-light tracking-widest uppercase" style={{ color: '#a3a380' }}>Now Playing</p>
+        <p className="text-neutral-400 text-xs font-light group-hover:text-neutral-300 transition-colors">
           {track.artist} — {track.title}
-        </span>
-      </p>
+        </p>
+      </div>
     </a>
   );
 }

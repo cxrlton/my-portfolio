@@ -3,6 +3,7 @@ import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import { Navbar } from "@/components/Navbar";
+import { NowPlaying } from "@/components/NowPlaying";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body className={`${roboto.variable} ${robotoMono.variable} font-sans antialiased`}>
         <ConvexClientProvider>
           <Navbar />
+          <NowPlaying />
           {children}
         </ConvexClientProvider>
       </body>
