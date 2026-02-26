@@ -5,7 +5,7 @@ import { ViewCounter } from "@/components/ViewCounter";
 import { CurrentFocus } from "@/components/CurrentFocus";
 import { ContactForm } from "@/components/ContactForm";
 
-const SECTIONS = ['Home', 'Projects', 'Publications', 'Skills', 'Certifications', 'Contact'];
+const SECTIONS = ['Home', 'Projects', 'Publications', 'Experience', 'Skills', 'Certifications', 'Contact'];
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -82,7 +82,7 @@ export default function Home() {
               <button onClick={() => goTo(1)} className="px-8 py-3 text-neutral-200 font-normal border transition-all hover:bg-neutral-200 hover:text-neutral-900" style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}>
                 View My Work
               </button>
-              <button onClick={() => goTo(5)} className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors">
+              <button onClick={() => goTo(6)} className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors">
                 Get In Touch
               </button>
               <a href="/cv.pdf" download className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors">
@@ -147,8 +147,29 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ── Skills ── */}
+        {/* ── Experience ── */}
         <div ref={sec(3)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
+          <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
+            <div className="w-full max-w-3xl">
+              <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Experience</h2>
+              <div className="space-y-5">
+                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                    <div>
+                      <h3 className="text-base font-normal text-neutral-200">Associate Data Scientist</h3>
+                      <p className="text-sm font-light mt-1" style={{ color: '#a3a380' }}>eProSoft · Full-time</p>
+                      <p className="text-neutral-600 text-xs mt-1 font-light">New Jersey, United States</p>
+                    </div>
+                    <span className="text-xs tracking-widest uppercase text-neutral-500 font-light whitespace-nowrap">Feb 2026 – Present</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Skills ── */}
+        <div ref={sec(4)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
           <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
             <div className="w-full max-w-3xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Technical Skills</h2>
@@ -172,7 +193,7 @@ export default function Home() {
         </div>
 
         {/* ── Certifications ── */}
-        <div ref={sec(4)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
+        <div ref={sec(5)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
           <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1c1c1a' }}>
             <div className="w-full max-w-3xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Certifications</h2>
@@ -211,7 +232,7 @@ export default function Home() {
         </div>
 
         {/* ── Contact ── */}
-        <div ref={sec(5)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
+        <div ref={sec(6)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
           <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
             <div className="w-full max-w-xl text-center">
               <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">Let&apos;s Connect</h2>
