@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as config from "../config.js";
 import type * as focus from "../focus.js";
 import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  config: typeof config;
   focus: typeof focus;
   messages: typeof messages;
   projects: typeof projects;
