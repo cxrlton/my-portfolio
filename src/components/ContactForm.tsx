@@ -36,7 +36,7 @@ export function ContactForm() {
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
-          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors font-light"
+          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-all duration-300 font-light"
           style={{ backgroundColor: '#222220' }}
         />
       </div>
@@ -47,7 +47,7 @@ export function ContactForm() {
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           required
-          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors font-light"
+          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-all duration-300 font-light"
           style={{ backgroundColor: '#222220' }}
         />
       </div>
@@ -58,7 +58,7 @@ export function ContactForm() {
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           required
           rows={4}
-          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors resize-none font-light"
+          className="w-full px-4 py-3 border border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-all duration-300 resize-none font-light"
           style={{ backgroundColor: '#222220' }}
         />
       </div>

@@ -16,6 +16,13 @@ code, pre {
   font-family: var(--font-roboto-mono), 'Roboto Mono', monospace;
 }
 
+@layer base {
+  a, button, input, textarea, select {
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

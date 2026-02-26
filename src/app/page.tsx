@@ -110,7 +110,7 @@ export default function Home() {
                   { label: 'Research · Jan 2024', title: 'Memorizing Transformers',   desc: 'Implemented kNN-based memory retrieval and external memory management, handling sequences up to 5120 tokens using PyTorch and FAISS.' },
                   { label: 'Multi-LLM · 2025',    title: 'DeepResearch Framework',    desc: 'Multi-LLM semantic orchestration framework for collaborative reasoning among SLMs. Deployed on HiPerGator via vLLM — 15% accuracy gain, 70% cost reduction.' },
                 ].map(p => (
-                  <div key={p.title} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                  <div key={p.title} className="p-5 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                     <span className="text-xs tracking-widest uppercase mb-3 inline-block font-light" style={{ color: '#a3a380' }}>{p.label}</span>
                     <h3 className="text-base font-normal text-neutral-200 mb-2">{p.title}</h3>
                     <p className="text-neutral-500 text-sm font-light leading-relaxed">{p.desc}</p>
@@ -130,13 +130,13 @@ export default function Home() {
             <div className="w-full max-w-3xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Publications</h2>
               <div className="space-y-5">
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>ACL 2025</span>
                   <h3 className="text-base font-normal text-neutral-200 mb-2">That Ain&apos;t Right: Assessing LLM Performance on QA in African American and West African English Dialects</h3>
                   <p className="text-neutral-500 text-sm font-light">W. Coggins, J. McKenzie, S. Youm, <span style={{ color: '#a3a380' }}>P. Mummaleti</span>, J. Gilbert, E. Ragan, and B. J. Dorr</p>
                   <p className="text-neutral-600 text-xs mt-2 font-light">9th Widening NLP Workshop, Suzhou, China</p>
                 </div>
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <span className="text-xs tracking-widest uppercase mb-3 inline-block" style={{ color: '#a3a380' }}>COMSYS 2024</span>
                   <h3 className="text-base font-normal text-neutral-200 mb-2">Automation of Human Body Measurements from 2D Images</h3>
                   <p className="text-neutral-500 text-sm font-light">C. Srikanth, S. R. Yerabelly, <span style={{ color: '#a3a380' }}>P. Mummaleti</span>, and A. Jain</p>
@@ -153,7 +153,7 @@ export default function Home() {
             <div className="w-full max-w-3xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Experience</h2>
               <div className="space-y-5">
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                     <div>
                       <h3 className="text-base font-normal text-neutral-200">Associate Data Scientist</h3>
@@ -180,7 +180,7 @@ export default function Home() {
                   { label: 'Tools & Data', skills: ['NumPy', 'Pandas', 'Jupyter', 'AWS', 'Git'] },
                   { label: 'Focus Areas',  skills: ['NLP', 'LLMs', 'Distributed Training', 'Transformers'] },
                 ].map(({ label, skills }) => (
-                  <div key={label} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                  <div key={label} className="p-5 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                     <h3 className="text-xs font-normal text-neutral-300 mb-3 tracking-widest uppercase">{label}</h3>
                     <div className="flex flex-wrap gap-2">
                       {skills.map(s => <span key={s} className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light">{s}</span>)}
@@ -198,7 +198,7 @@ export default function Home() {
             <div className="w-full max-w-3xl">
               <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Certifications</h2>
               <div className="space-y-5">
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
                     <div>
                       <h3 className="text-base font-normal text-neutral-200">Senior Certificate in Computer Science & Engineering</h3>
@@ -208,7 +208,7 @@ export default function Home() {
                   </div>
                   <p className="text-neutral-500 text-sm font-light leading-relaxed">Completed the final undergraduate semester through an exchange program at the University of Florida, earning 9 graduate-level credits.</p>
                 </div>
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <div>
                       <h3 className="text-base font-normal text-neutral-200">Generative AI with Large Language Models</h3>
@@ -217,7 +217,7 @@ export default function Home() {
                     <span className="text-xs tracking-widest uppercase text-neutral-500 font-light whitespace-nowrap">Oct 2023</span>
                   </div>
                 </div>
-                <div className="p-6 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
+                <div className="p-6 border border-neutral-800 hover:border-neutral-600 transition-all duration-300" style={{ backgroundColor: '#222220' }}>
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <div>
                       <h3 className="text-base font-normal text-neutral-200">Natural Language Processing with Classification and Vector Spaces</h3>

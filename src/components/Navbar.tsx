@@ -95,7 +95,7 @@ export function Navbar() {
                 key={href}
                 href={href}
                 onClick={() => setOpen(false)}
-                className="py-2 text-sm font-light tracking-widest uppercase transition-colors"
+                className="py-2 text-sm font-light tracking-widest uppercase transition-all duration-300"
                 style={{ color: active ? '#a3a380' : '#737373' }}
               >
                 {active && <span className="mr-2" style={{ color: '#a3a380' }}>—</span>}
