@@ -106,9 +106,9 @@ export default function Home() {
               <p className="text-neutral-500 text-center mb-10 font-light text-sm">Deep learning architectures, NLP research, and scalable ML systems</p>
               <div className="grid md:grid-cols-3 gap-4">
                 {[
-                  { label: 'NLP',             title: 'Dialect-Robust QA',           desc: 'LLM evaluation across African American and West African English dialects.' },
-                  { label: 'Computer Vision', title: 'Body Measurement Automation', desc: 'Extracting human body measurements from 2D images using deep learning.' },
-                  { label: 'ML Systems',      title: 'Distributed Training',         desc: 'Scalable training pipelines for large language models across GPU clusters.' },
+                  { label: 'PyTorch · Dec 2024', title: 'GPT-2 Reimplementation',    desc: 'Reimplemented GPT-2 (~124M params) in PyTorch, trained on FineWeb-Edu (10B tokens) using DDP across 4x NVIDIA L40S GPUs with Flash Attention and mixed precision.' },
+                  { label: 'Research · Jan 2024', title: 'Memorizing Transformers',   desc: 'Implemented kNN-based memory retrieval and external memory management, handling sequences up to 5120 tokens using PyTorch and FAISS.' },
+                  { label: 'Multi-LLM · 2025',    title: 'DeepResearch Framework',    desc: 'Multi-LLM semantic orchestration framework for collaborative reasoning among SLMs. Deployed on HiPerGator via vLLM — 15% accuracy gain, 70% cost reduction.' },
                 ].map(p => (
                   <div key={p.title} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
                     <span className="text-xs tracking-widest uppercase mb-3 inline-block font-light" style={{ color: '#a3a380' }}>{p.label}</span>
