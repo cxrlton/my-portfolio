@@ -5,186 +5,164 @@ import { ViewCounter } from "@/components/ViewCounter";
 import { CurrentFocus } from "@/components/CurrentFocus";
 import { ContactForm } from "@/components/ContactForm";
 
-const SECTIONS = ['Home', 'Projects', 'Publications', 'Skills', 'Certifications', 'Contact'];
-const COMMIT_RATIO = 0.22;   // fraction of viewport to commit
-const SPRING_DELAY = 140;    // ms after last wheel event before settling
-const TRANSITION_MS = 680;
+const SECTIONS   = ['Home', 'Projects', 'Publications', 'Skills', 'Certifications', 'Contact'];
+const THRESHOLD  = 150;   // px accumulated to commit
+const MAX_OFFSET = 220;   // px max visual drag
+const DELTA_CAP  = 60;    // px max per wheel event (tames trackpad momentum)
+const LOCKOUT_MS = 900;   // ignore events after committing
+const EASE_MS    = 680;
+const SPRING_MS  = 80;    // ms of inactivity before spring-back
 
 export default function Home() {
-  const [active, setActive] = useState(0);
-  const [offset, setOffset] = useState(0);        // live drag offset in px
-  const [useTransition, setUseTransition] = useState(false);
+  const [active, setActive]   = useState(0);
+  const activeRef  = useRef(0);
+  const locked     = useRef(false);
+  const offset     = useRef(0);
+  const els        = useRef<(HTMLDivElement | null)[]>([]);
+  const springTmr  = useRef<ReturnType<typeof setTimeout>>();
+  const raf        = useRef<number>();
+  const dragStartY = useRef(0);
+  const isDragging = useRef(false);
 
-  const activeRef   = useRef(0);
-  const offsetRef   = useRef(0);
-  const committing  = useRef(false);
-  const dragging    = useRef(false);
-  const dragStartY  = useRef(0);
-  const springTimer = useRef<ReturnType<typeof setTimeout>>();
-
-  useEffect(() => { activeRef.current = active; }, [active]);
+  // ── write transforms directly to DOM (no React re-render) ────────────────
+  const paint = useCallback((transition: boolean) => {
+    const a = activeRef.current;
+    const o = offset.current;
+    els.current.forEach((el, i) => {
+      if (!el) return;
+      el.style.transition = transition ? `transform ${EASE_MS}ms cubic-bezier(0.76,0,0.24,1)` : 'none';
+      el.style.transform  = `translateY(calc(${(i - a) * 100}% - ${o}px))`;
+    });
+  }, []);
 
   // ── spring back to resting position ──────────────────────────────────────
   const springBack = useCallback(() => {
-    offsetRef.current = 0;
-    setUseTransition(true);
-    setOffset(0);
-    setTimeout(() => setUseTransition(false), TRANSITION_MS);
-  }, []);
+    offset.current = 0;
+    requestAnimationFrame(() => { requestAnimationFrame(() => { paint(true); }); });
+  }, [paint]);
 
   // ── commit to a new section ───────────────────────────────────────────────
   const commit = useCallback((next: number) => {
-    const clamped = Math.max(0, Math.min(SECTIONS.length - 1, next));
-    if (committing.current) return;
-    if (clamped === activeRef.current) { springBack(); return; }
+    const target = Math.max(0, Math.min(SECTIONS.length - 1, next));
+    if (locked.current || target === activeRef.current) {
+      springBack();
+      return;
+    }
+    locked.current    = true;
+    offset.current    = 0;
+    activeRef.current = target;
+    setActive(target);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { paint(true); }); });
+    setTimeout(() => { locked.current = false; }, LOCKOUT_MS);
+  }, [paint, springBack]);
 
-    committing.current = true;
-    offsetRef.current  = 0;
-    setUseTransition(true);
-    setOffset(0);
-    setActive(clamped);
+  // ── accumulate delta, decide to commit or schedule spring-back ────────────
+  const push = useCallback((raw: number) => {
+    if (locked.current) return;
+    const capped = Math.sign(raw) * Math.min(Math.abs(raw), DELTA_CAP);
+    offset.current = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, offset.current + capped));
 
-    setTimeout(() => {
-      committing.current = false;
-      setUseTransition(false);
-    }, TRANSITION_MS);
-  }, [springBack]);
+    cancelAnimationFrame(raf.current!);
+    raf.current = requestAnimationFrame(() => paint(false));
 
-  // ── decide commit or spring back ──────────────────────────────────────────
-  const settle = useCallback(() => {
-    const threshold = window.innerHeight * COMMIT_RATIO;
-    const cur = offsetRef.current;
-    if (cur >  threshold) commit(activeRef.current + 1);
-    else if (cur < -threshold) commit(activeRef.current - 1);
-    else springBack();
-  }, [commit, springBack]);
+    clearTimeout(springTmr.current);
 
-  // ── update offset during drag ─────────────────────────────────────────────
-  const applyDelta = useCallback((delta: number) => {
-    if (committing.current) return;
-    const MAX = window.innerHeight * 0.55;
-    const next = Math.max(-MAX, Math.min(MAX, offsetRef.current + delta));
-    offsetRef.current = next;
-    setUseTransition(false);
-    setOffset(next);
+    if (offset.current >  THRESHOLD) { commit(activeRef.current + 1); return; }
+    if (offset.current < -THRESHOLD) { commit(activeRef.current - 1); return; }
 
-    clearTimeout(springTimer.current);
-    springTimer.current = setTimeout(settle, SPRING_DELAY);
-  }, [settle]);
+    springTmr.current = setTimeout(() => { if (!locked.current) springBack(); }, SPRING_MS);
+  }, [paint, commit, springBack]);
 
   // ── wheel ─────────────────────────────────────────────────────────────────
   useEffect(() => {
-    const onWheel = (e: WheelEvent) => { e.preventDefault(); applyDelta(e.deltaY); };
-    window.addEventListener('wheel', onWheel, { passive: false });
-    return () => window.removeEventListener('wheel', onWheel);
-  }, [applyDelta]);
+    const fn = (e: WheelEvent) => { e.preventDefault(); push(e.deltaY); };
+    window.addEventListener('wheel', fn, { passive: false });
+    return () => window.removeEventListener('wheel', fn);
+  }, [push]);
 
   // ── mouse drag ────────────────────────────────────────────────────────────
   useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (committing.current) return;
-      dragging.current  = true;
+    const down = (e: MouseEvent) => { isDragging.current = true; dragStartY.current = e.clientY; };
+    const move = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      const d = dragStartY.current - e.clientY;
       dragStartY.current = e.clientY;
+      push(d);
     };
-    const onMove = (e: MouseEvent) => {
-      if (!dragging.current) return;
-      const delta = dragStartY.current - e.clientY;
-      dragStartY.current = e.clientY;
-      applyDelta(delta);
+    const up = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      clearTimeout(springTmr.current);
+      if (!locked.current) springBack();
     };
-    const onUp = () => {
-      if (!dragging.current) return;
-      dragging.current = false;
-      clearTimeout(springTimer.current);
-      settle();
-    };
-    window.addEventListener('mousedown', onDown);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
+    window.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup',   up);
     return () => {
-      window.removeEventListener('mousedown', onDown);
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
+      window.removeEventListener('mousedown', down);
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup',   up);
     };
-  }, [applyDelta, settle]);
+  }, [push, springBack]);
 
-  // ── touch drag ────────────────────────────────────────────────────────────
+  // ── touch ─────────────────────────────────────────────────────────────────
   useEffect(() => {
-    const onStart = (e: TouchEvent) => {
-      dragging.current   = true;
-      dragStartY.current = e.touches[0].clientY;
-    };
-    const onMove = (e: TouchEvent) => {
-      if (!dragging.current) return;
+    const start = (e: TouchEvent) => { isDragging.current = true; dragStartY.current = e.touches[0].clientY; };
+    const move  = (e: TouchEvent) => {
+      if (!isDragging.current) return;
       e.preventDefault();
-      const delta = dragStartY.current - e.touches[0].clientY;
+      const d = dragStartY.current - e.touches[0].clientY;
       dragStartY.current = e.touches[0].clientY;
-      applyDelta(delta);
+      push(d);
     };
-    const onEnd = () => {
-      dragging.current = false;
-      clearTimeout(springTimer.current);
-      settle();
+    const end = () => {
+      isDragging.current = false;
+      clearTimeout(springTmr.current);
+      if (!locked.current) springBack();
     };
-    window.addEventListener('touchstart', onStart);
-    window.addEventListener('touchmove',  onMove, { passive: false });
-    window.addEventListener('touchend',   onEnd);
+    window.addEventListener('touchstart', start);
+    window.addEventListener('touchmove',  move, { passive: false });
+    window.addEventListener('touchend',   end);
     return () => {
-      window.removeEventListener('touchstart', onStart);
-      window.removeEventListener('touchmove',  onMove);
-      window.removeEventListener('touchend',   onEnd);
+      window.removeEventListener('touchstart', start);
+      window.removeEventListener('touchmove',  move);
+      window.removeEventListener('touchend',   end);
     };
-  }, [applyDelta, settle]);
+  }, [push, springBack]);
 
   // ── keyboard ──────────────────────────────────────────────────────────────
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
+    const fn = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown') commit(activeRef.current + 1);
       if (e.key === 'ArrowUp'   || e.key === 'PageUp')   commit(activeRef.current - 1);
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', fn);
+    return () => window.removeEventListener('keydown', fn);
   }, [commit]);
 
-  // ── section style ─────────────────────────────────────────────────────────
-  const sStyle = (i: number): React.CSSProperties => ({
-    position: 'fixed',
-    inset: 0,
-    top: '57px',
-    transform: `translateY(calc(${(i - active) * 100}% - ${offset}px))`,
-    transition: useTransition
-      ? `transform ${TRANSITION_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`
-      : 'none',
-    willChange: 'transform',
-    overflow: 'hidden',
-    cursor: 'grab',
-  });
+  // ── set initial positions once mounted ────────────────────────────────────
+  useEffect(() => { paint(false); }, [paint]);
 
   const goTo = (i: number) => commit(i);
+
+  const fixed: React.CSSProperties = {
+    position: 'fixed', inset: 0, top: '57px',
+    overflow: 'hidden', willChange: 'transform',
+  };
 
   return (
     <>
       {/* Dot navigation */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3">
         {SECTIONS.map((label, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            title={label}
-            className="rounded-full transition-all duration-300"
-            style={{
-              width: '6px',
-              height: '6px',
-              backgroundColor: active === i ? '#a3a380' : '#3a3a38',
-              transform: active === i ? 'scale(1.6)' : 'scale(1)',
-            }}
-          />
+          <button key={i} onClick={() => goTo(i)} title={label} className="rounded-full transition-all duration-300"
+            style={{ width: 6, height: 6, backgroundColor: active === i ? '#a3a380' : '#3a3a38', transform: active === i ? 'scale(1.6)' : 'scale(1)' }} />
         ))}
       </div>
 
       {/* ── Hero ── */}
-      <div style={sStyle(0)}>
-        <div className="h-full flex flex-col items-center justify-center px-6 text-center relative" style={{ background: '#1c1c1a', cursor: 'default' }}>
+      <div ref={el => { els.current[0] = el; }} style={fixed}>
+        <div className="h-full flex flex-col items-center justify-center px-6 text-center relative" style={{ background: '#1c1c1a' }}>
           <p className="text-neutral-500 text-base mb-4 tracking-widest uppercase font-light">Hello, I&apos;m</p>
           <h1 className="text-5xl sm:text-7xl font-light text-neutral-200 mb-4 tracking-tight">
             Pradham <span style={{ color: '#a3a380' }}>Mummaleti</span>
@@ -215,17 +193,17 @@ export default function Home() {
       </div>
 
       {/* ── Projects ── */}
-      <div style={sStyle(1)}>
+      <div ref={el => { els.current[1] = el; }} style={fixed}>
         <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
           <div className="w-full max-w-4xl">
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-2 tracking-tight">Research & Projects</h2>
             <p className="text-neutral-500 text-center mb-10 font-light text-sm">Deep learning architectures, NLP research, and scalable ML systems</p>
             <div className="grid md:grid-cols-3 gap-4">
               {[
-                { label: 'NLP', title: 'Dialect-Robust QA', desc: 'LLM evaluation across African American and West African English dialects.' },
-                { label: 'Computer Vision', title: 'Body Measurement Automation', desc: 'Extracting human body measurements from 2D images using deep learning.' },
-                { label: 'ML Systems', title: 'Distributed Training', desc: 'Scalable training pipelines for large language models across GPU clusters.' },
-              ].map((p) => (
+                { label: 'NLP',            title: 'Dialect-Robust QA',           desc: 'LLM evaluation across African American and West African English dialects.' },
+                { label: 'Computer Vision',title: 'Body Measurement Automation', desc: 'Extracting human body measurements from 2D images using deep learning.' },
+                { label: 'ML Systems',     title: 'Distributed Training',         desc: 'Scalable training pipelines for large language models across GPU clusters.' },
+              ].map(p => (
                 <div key={p.title} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
                   <span className="text-xs tracking-widest uppercase mb-3 inline-block font-light" style={{ color: '#a3a380' }}>{p.label}</span>
                   <h3 className="text-base font-normal text-neutral-200 mb-2">{p.title}</h3>
@@ -241,7 +219,7 @@ export default function Home() {
       </div>
 
       {/* ── Publications ── */}
-      <div style={sStyle(2)}>
+      <div ref={el => { els.current[2] = el; }} style={fixed}>
         <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1c1c1a' }}>
           <div className="w-full max-w-3xl">
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Publications</h2>
@@ -264,23 +242,21 @@ export default function Home() {
       </div>
 
       {/* ── Skills ── */}
-      <div style={sStyle(3)}>
+      <div ref={el => { els.current[3] = el; }} style={fixed}>
         <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
           <div className="w-full max-w-3xl">
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Technical Skills</h2>
             <div className="grid md:grid-cols-2 gap-5">
               {[
-                { label: 'Languages',   skills: ['Python', 'C/C++', 'Julia', 'Pony', 'R', 'SQL'] },
-                { label: 'ML & AI',     skills: ['PyTorch', 'TensorFlow', 'Scikit-learn', 'Hugging Face', 'FAISS'] },
-                { label: 'Tools & Data',skills: ['NumPy', 'Pandas', 'Jupyter', 'AWS', 'Git'] },
-                { label: 'Focus Areas', skills: ['NLP', 'LLMs', 'Distributed Training', 'Transformers'] },
+                { label: 'Languages',    skills: ['Python', 'C/C++', 'Julia', 'Pony', 'R', 'SQL'] },
+                { label: 'ML & AI',      skills: ['PyTorch', 'TensorFlow', 'Scikit-learn', 'Hugging Face', 'FAISS'] },
+                { label: 'Tools & Data', skills: ['NumPy', 'Pandas', 'Jupyter', 'AWS', 'Git'] },
+                { label: 'Focus Areas',  skills: ['NLP', 'LLMs', 'Distributed Training', 'Transformers'] },
               ].map(({ label, skills }) => (
                 <div key={label} className="p-5 border border-neutral-800" style={{ backgroundColor: '#222220' }}>
                   <h3 className="text-xs font-normal text-neutral-300 mb-3 tracking-widest uppercase">{label}</h3>
                   <div className="flex flex-wrap gap-2">
-                    {skills.map((s) => (
-                      <span key={s} className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light">{s}</span>
-                    ))}
+                    {skills.map(s => <span key={s} className="px-3 py-1 text-neutral-400 text-sm border border-neutral-700 font-light">{s}</span>)}
                   </div>
                 </div>
               ))}
@@ -290,7 +266,7 @@ export default function Home() {
       </div>
 
       {/* ── Certifications ── */}
-      <div style={sStyle(4)}>
+      <div ref={el => { els.current[4] = el; }} style={fixed}>
         <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1c1c1a' }}>
           <div className="w-full max-w-3xl">
             <h2 className="text-3xl font-light text-neutral-200 text-center mb-10 tracking-tight">Certifications</h2>
@@ -329,7 +305,7 @@ export default function Home() {
       </div>
 
       {/* ── Contact ── */}
-      <div style={sStyle(5)}>
+      <div ref={el => { els.current[5] = el; }} style={fixed}>
         <div className="h-full flex flex-col items-center justify-center px-6" style={{ background: '#1f1f1c' }}>
           <div className="w-full max-w-xl text-center">
             <h2 className="text-3xl font-light text-neutral-200 mb-4 tracking-tight">Let&apos;s Connect</h2>
