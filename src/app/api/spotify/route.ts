@@ -18,14 +18,12 @@ async function getAccessToken() {
   });
 
   const data = await res.json();
-  if (!data.access_token) throw new Error(`token_exchange_failed: ${JSON.stringify(data)}`);
   return data.access_token as string;
 }
 
 export async function GET() {
   try {
     const token = await getAccessToken();
-    if (!token) return NextResponse.json({ debug: 'no_token' });
 
     const res = await fetch(NOW_PLAYING_URL, {
       headers: { Authorization: `Bearer ${token}` },
@@ -33,13 +31,13 @@ export async function GET() {
     });
 
     if (res.status === 204 || res.status >= 400) {
-      return NextResponse.json({ isPlaying: false, debug: `spotify_status_${res.status}` });
+      return NextResponse.json({ isPlaying: false });
     }
 
     const song = await res.json();
 
     if (!song?.item) {
-      return NextResponse.json({ isPlaying: false, debug: 'no_item', raw: song });
+      return NextResponse.json({ isPlaying: false });
     }
 
     return NextResponse.json({
@@ -49,7 +47,7 @@ export async function GET() {
       albumArt:  song.item.album.images[2]?.url ?? song.item.album.images[0]?.url,
       songUrl:   song.item.external_urls.spotify,
     });
-  } catch (e) {
-    return NextResponse.json({ isPlaying: false, debug: String(e) });
+  } catch {
+    return NextResponse.json({ isPlaying: false });
   }
 }
