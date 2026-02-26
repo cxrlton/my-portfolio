@@ -140,6 +140,16 @@ export default function Home() {
     return () => window.removeEventListener('keydown', fn);
   }, [commit]);
 
+  // ── lock body scroll to prevent elastic overscroll white flash ───────────
+  useEffect(() => {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   // ── set initial positions once mounted ────────────────────────────────────
   useEffect(() => { paint(false); }, [paint]);
 
