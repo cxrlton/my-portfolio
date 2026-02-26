@@ -39,8 +39,8 @@ export default function Home() {
 
   return (
     <>
-      {/* Dot navigation */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3">
+      {/* Dot navigation — hidden on mobile */}
+      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col gap-3">
         {SECTIONS.map((label, i) => (
           <button key={i} onClick={() => goTo(i)} title={label}
             className="rounded-full transition-all duration-300"
@@ -68,29 +68,29 @@ export default function Home() {
 
         {/* ── Hero ── */}
         <div ref={sec(0)} style={{ height: '100%', scrollSnapAlign: 'start' }}>
-          <div className="h-full flex flex-col items-center justify-center px-6 text-center relative" style={{ background: '#1c1c1a' }}>
-            <p className="text-neutral-500 text-base mb-4 tracking-widest uppercase font-light">Hello, I&apos;m</p>
-            <h1 className="text-5xl sm:text-7xl font-light text-neutral-200 mb-4 tracking-tight">
+          <div className="h-full flex flex-col items-center justify-center px-8 text-center relative" style={{ background: '#1c1c1a' }}>
+            <p className="text-neutral-500 text-sm mb-3 tracking-widest uppercase font-light">Hello, I&apos;m</p>
+            <h1 className="text-4xl sm:text-7xl font-light text-neutral-200 mb-3 tracking-tight">
               Pradham <span style={{ color: '#a3a380' }}>Mummaleti</span>
             </h1>
-            <h2 className="text-xl sm:text-2xl text-neutral-400 mb-8 font-light">Associate Data Scientist</h2>
-            <p className="text-neutral-500 max-w-lg text-base leading-relaxed font-light">
+            <h2 className="text-lg sm:text-2xl text-neutral-400 mb-5 font-light">Associate Data Scientist</h2>
+            <p className="text-neutral-500 max-w-sm sm:max-w-lg text-sm sm:text-base leading-relaxed font-light">
               Teaching machines to understand the world — without imposing one.
             </p>
             <CurrentFocus />
-            <div className="flex gap-4 flex-col sm:flex-row mt-12">
-              <button onClick={() => goTo(1)} className="px-8 py-3 text-neutral-200 font-normal border transition-all hover:bg-neutral-200 hover:text-neutral-900" style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}>
+            <div className="flex gap-3 flex-col sm:flex-row mt-8 w-full sm:w-auto">
+              <button onClick={() => goTo(1)} className="px-6 py-2.5 text-sm text-neutral-200 font-normal border transition-all duration-300 hover:bg-neutral-200 hover:text-neutral-900" style={{ borderColor: '#a3a380', backgroundColor: 'transparent' }}>
                 View My Work
               </button>
-              <button onClick={() => goTo(6)} className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors">
+              <button onClick={() => goTo(6)} className="px-6 py-2.5 text-sm border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-all duration-300">
                 Get In Touch
               </button>
-              <a href="/cv.pdf" download className="px-8 py-3 border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-colors">
+              <a href="/cv.pdf" download className="px-6 py-2.5 text-sm border border-neutral-700 text-neutral-400 font-normal hover:border-neutral-500 hover:text-neutral-300 transition-all duration-300">
                 Download CV
               </a>
             </div>
-            <div className="absolute bottom-20"><ViewCounter /></div>
-            <button onClick={() => goTo(1)} className="absolute bottom-10 animate-bounce" aria-label="Next section">
+            <div className="mt-6 sm:absolute sm:bottom-20"><ViewCounter /></div>
+            <button onClick={() => goTo(1)} className="hidden sm:block absolute bottom-10 animate-bounce" aria-label="Next section">
               <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
