@@ -34,4 +34,10 @@ export default defineSchema({
   currentFocus: defineTable({
     text: v.string(),
   }),
+
+  // Key-value config store (e.g. Spotify refresh token)
+  config: defineTable({
+    key: v.string(),
+    value: v.string(),
+  }).index("by_key", ["key"]),
 });
