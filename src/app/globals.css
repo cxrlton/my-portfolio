@@ -4,10 +4,12 @@
 
 html {
   scroll-behavior: smooth;
+  background: #1c1c1a;
 }
 
 body {
   font-family: var(--font-roboto), 'Roboto', sans-serif;
+  background: #1c1c1a;
 }
 
 code, pre {
